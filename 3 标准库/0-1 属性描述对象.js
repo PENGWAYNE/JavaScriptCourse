@@ -2,7 +2,7 @@
  * @Description: 属性描述对象
  * @Author: WaynePeng
  * @Date: 2020-02-21 13:57:51
- * @LastEditTime: 2020-02-25 19:31:07
+ * @LastEditTime: 2020-03-03 12:01:43
  * @LastEditors: WaynePeng
  */
 // 1. 描述： JavaScript 提供了一个内部数据结构，用来描述对象的属性，控制它的行为，比如该属性是否可写、可遍历等等。这个内部数据结构称为“属性描述对象”（attributes object）。每个属性都有自己对应的属性描述对象，保存该属性的一些元信息
