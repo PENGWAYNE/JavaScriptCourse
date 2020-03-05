@@ -2,8 +2,8 @@
  * @Description: 数据类型的基本描述
  * @Author: WaynePeng
  * @Date: 2019-12-09 21:27:35
- * @LastEditTime : 2020-01-14 23:24:23
- * @LastEditors  : WaynePeng
+ * @LastEditTime: 2020-03-05 17:33:00
+ * @LastEditors: WaynePeng
  */
 // js 基本数据类型
 
@@ -16,3 +16,4 @@
 // Symbol : 独一无二的，可以保证不会与其他属性名产生冲突。
 
 // null和undefined的区别是这样的：null是一个表示“空”的对象，转为数值时为0；undefined是一个表示"此处无定义"的原始值，转为数值时为NaN。 
+// BigInt  (es10)
