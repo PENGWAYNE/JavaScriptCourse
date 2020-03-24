@@ -2,7 +2,7 @@
  * @Description: Date 对象
  * @Author: WaynePeng
  * @Date: 2020-03-21 14:46:38
- * @LastEditTime: 2020-03-22 16:24:20
+ * @LastEditTime: 2020-03-24 14:17:32
  * @LastEditors: WaynePeng
  */
 // Date对象是 JavaScript 原生的时间库。它以国际标准时间（UTC）1970年1月1日00:00:00作为时间的零点，可以表示的时间范围是前后各1亿天（单位为毫秒）
@@ -104,7 +104,155 @@ console.log('################# 实例方法 ###################')
 // get类：获取Date对象的日期和时间
 // set类：设置Date对象的日期和时间
 
-// (1). Date.prototype.valueOf() => valueOf方法返回实例对象距离时间零点（1970年1月1日00:00:00 UTC）对应的毫秒数，该方法等同于getTime方法
+// (1). Date.prototype.valueOf() => valueOf方法返回实例对象距离时间零点（1970年1月1日00:00:00 UTC）对应的毫秒数，该方法等同于getTime方法 (预期为数值的场合，Date实例会自动调用该方法)
 let d3 = new Date()
 console.log(d3.valueOf())
 console.log(d3.getTime())
+
+// (2). to 类方法
+console.log('################## to 类方法 ##################')
+// 2.1 Date.prototype.toString() => toString方法返回一个完整的日期字符串
+let d4 = new Date(2010, 1, 1)
+console.log(d4.toString()) // Mon Feb 01 2010 00:00:00 GMT+0800 (GMT+08:00)
+
+// toString是默认的调用方法，所以如果直接读取Date实例，就相当于调用这个方法
+console.log(d4) // 2010-01-31T16:00:00.000Z
+
+// 2.2 Date.prototype.toUTCString() => toUTCString方法返回对应的 UTC 时间，也就是比北京时间晚8个小时
+console.log(d4.toUTCString()) // Sun, 31 Jan 2010 16:00:00 GMT
+
+// 2.3 Date.prototype.toISOString() => toISOString方法返回对应时间的 ISO8601 写法 (toISOString方法返回的总是 UTC 时区的时间)
+console.log(d4.toISOString()) // 2010-01-31T16:00:00.000Z
+
+// 2.4 Date.prototype.toJSON() => toJSON方法返回一个符合 JSON 格式的 ⚠️ ISO 日期 ⚠️字符串，与toISOString方法的返回结果完全相同
+console.log(d4.toJSON()) // 2010-01-31T16:00:00.000Z
+
+// 2.5 Date.prototype.toDateString() => toDateString方法返回日期字符串（不含小时、分和秒）
+console.log(d4.toDateString()) // Mon Feb 01 2010
+
+// 2.6 Date.prototype.toTimeString() => toTimeString方法返回时间字符串（不含年月日）
+console.log(d4.toTimeString()) // 00:00:00 GMT+0800 (GMT+08:00)
+
+// 2.7 本地时间
+// 以下三种方法，可以将 Date 实例转为表示本地时间的字符串:
+
+// Date.prototype.toLocaleString()：完整的本地时间
+// Date.prototype.toLocaleDateString()：本地日期（不含小时、分和秒）
+// Date.prototype.toLocaleTimeString()：本地时间（不含年月日）
+let d5 = new Date(2013, 0, 1)
+
+console.log(d5.toLocaleString())
+// 中文版浏览器为"2013年1月1日 上午12:00:00"
+// 英文版浏览器为"1/1/2013 12:00:00 AM"
+
+console.log(d5.toLocaleDateString())
+// 中文版浏览器为"2013年1月1日"
+// 英文版浏览器为"1/1/2013"
+
+console.log(d5.toLocaleTimeString())
+// 中文版浏览器为"上午12:00:00"
+// 英文版浏览器为"12:00:00 AM"
+
+// 这三个方法都有两个可选的参数:
+
+// dateObj.toLocaleString([locales[, options]])
+// dateObj.toLocaleDateString([locales[, options]])
+// dateObj.toLocaleTimeString([locales[, options]])
+
+// options配置对象有以下属性:
+
+// dateStyle：可能的值为full、long、medium、short
+// timeStyle：可能的值为full、long、medium、short
+// month：可能的值为numeric、2-digit、long、short、narrow
+// year：可能的值为numeric、2-digit
+// weekday：可能的值为long、short、narrow
+// day、hour、minute、second：可能的值为numeric、2-digit
+// timeZone：可能的值为 IANA 的时区数据库
+// timeZooneName：可能的值为long、short
+// hour12：24小时周期还是12小时周期，可能的值为true、false
+
+// (3). get 类方法
+// Date对象提供了一系列get*方法，用来获取实例对象某个方面的值
+
+let d6 = new Date(2020, 2, 24)
+
+// getTime()：返回实例距离1970年1月1日00:00:00的毫秒数，等同于valueOf方法
+console.log(d6.getTime()) // 1584979200000
+// getDate()：返回实例对象对应每个月的几号（从1开始）
+console.log(d6.getDate()) // 24
+// getDay()：返回星期几，星期日为0，星期一为1，以此类推
+console.log(d6.getDay()) // 2
+// getFullYear()：返回四位的年份
+console.log(d6.getFullYear()) // 2020
+// getMonth()：返回月份（0表示1月，11表示12月）
+console.log(d6.getMonth()) // 2
+// getHours()：返回小时（0-23）
+console.log(d6.getHours()) // 0
+// getMilliseconds()：返回毫秒（0-999）
+console.log(d6.getMilliseconds()) // 0
+// getMinutes()：返回分钟（0-59）
+console.log(d6.getMinutes()) // 0
+// getSeconds()：返回秒（0-59）
+console.log(d6.getSeconds()) // 0
+// getTimezoneOffset()：返回当前时间与 UTC 的时区差异，以分钟表示，返回结果考虑到了夏令时因素
+console.log(d6.getTimezoneOffset()) // -480
+
+// 所有这些get*方法返回的都是整数，不同方法返回值的范围不一样
+// 分钟和秒：0 到 59
+// 小时：0 到 23
+// 星期：0（星期天）到 6（星期六）
+// 日期：1 到 31
+// 月份：0（一月）到 11（十二月）
+
+// 上面这些get*方法返回的都是当前时区的时间，Date对象还提供了这些方法对应的 UTC 版本，用来返回 UTC 时间
+// getUTCDate()
+// getUTCFullYear()
+// getUTCMonth()
+// getUTCDay()
+// getUTCHours()
+// getUTCMinutes()
+// getUTCSeconds()
+// getUTCMilliseconds()
+
+// (4). set 类方法
+console.log('################## set 类方法 ###################')
+// Date对象提供了一系列set*方法，用来设置实例对象的各个方面:
+// setDate(date)：设置实例对象对应的每个月的几号（1-31），返回改变后毫秒时间戳
+// setFullYear(year [, month, date])：设置四位年份
+// setHours(hour [, min, sec, ms])：设置小时（0-23）
+// setMilliseconds()：设置毫秒（0-999）
+// setMinutes(min [, sec, ms])：设置分钟（0-59）
+// setMonth(month [, date])：设置月份（0-11）
+// setSeconds(sec [, ms])：设置秒（0-59）
+// setTime(milliseconds)：设置毫秒时间戳
+// 这些方法基本是跟get*方法一一对应的，但是没有setDay方法，因为星期几是计算出来的，而不是设置的。另外，需要注意的是，凡是涉及到设置月份，都是从0开始算的，即0是1月，11是12月
+
+let d7 = new Date(2020, 2, 20)
+console.log(d7) // 2020-03-19T16:00:00.000Z
+console.log(d7.setDate(3)) // 1583164800000
+console.log(d7) // 2020-03-02T16:00:00.000Z
+
+// set*方法的参数都会自动折算。以setDate()为例，如果参数超过当月的最大天数，则向下一个月顺延，如果参数是负数，表示从上个月的最后一天开始减去的天数
+d7.setDate(50)
+console.log(d7) // 2020-04-18T16:00:00.000Z
+d7.setDate(-10)
+console.log(d7) // 2020-03-20T16:00:00.000Z
+
+// set类方法和get类方法，可以结合使用，得到相对时间
+var d8 = new Date();
+
+// 将日期向后推1000天
+d8.setDate(d8.getDate() + 1000)
+// 将时间设为6小时后
+d8.setHours(d8.getHours() + 6)
+// 将年份设为去年
+d8.setFullYear(d8.getFullYear() - 1)
+
+// set*系列方法除了setTime()，都有对应的 UTC 版本，即设置 UTC 时区的时间:
+// setUTCDate()
+// setUTCFullYear()
+// setUTCHours()
+// setUTCMilliseconds()
+// setUTCMinutes()
+// setUTCMonth()
+// setUTCSeconds()
