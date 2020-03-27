@@ -2,7 +2,7 @@
  * @Description: RegExp 对象
  * @Author: WaynePeng
  * @Date: 2020-03-24 14:20:38
- * @LastEditTime: 2020-03-25 11:15:37
+ * @LastEditTime: 2020-03-27 18:06:37
  * @LastEditors: WaynePeng
  */
 {
@@ -180,9 +180,10 @@
   console.log(r.lastIndex) // 0
   console.log(r.source) // "abc"
 
-  // 实例方法
+  // 3.实例方法
   console.log('###################### 实例方法 #######################')
   // (1). RegExp.prototype.test() => 正则实例对象的test方法返回一个布尔值，表示当前模式是否能匹配参数字符串
+  console.log('################ (1). RegExp.prototype.test() #################')
   console.log(/13/.test('my dog name is 13')) // 13
   // 如果正则表达式带有g修饰符，则每一次test方法都从上一次结束的位置开始向后匹配
   let r1 = /x/g
@@ -199,8 +200,84 @@
 
   // 上面代码的正则表达式使用了g修饰符，表示是全局搜索，会有多个结果。接着，三次使用test方法，每一次开始搜索的位置都是上一次匹配的后一个位置
   // 带有g修饰符时，可以通过正则对象的lastIndex属性指定开始搜索的位置
-  
+
   console.log(r1.lastIndex) // 0
   console.log(r1.test(s1)) // true
-  // 
+  // 因为 r1.test() 上一次匹配失败，则 lastIndex 被设置为 0
+
+  // ⚠️ 注意，带有g修饰符时，正则表达式内部会记住上一次的lastIndex属性，这时不应该更换所要匹配的字符串，否则会有一些难以察觉的错误
+  // 正则实例对象的lastIndex属性不仅可读，还可写。设置了g修饰符的时候，只要手动设置了lastIndex的值，就会从指定位置开始匹配
+
+  let r2 = /abc/g
+  console.log(r2.test('abc')) // true
+  console.log(r2.test('abcd')) // false
+
+  // 上面代码中，由于正则表达式r是从上一次的lastIndex位置开始匹配，导致第二次执行test方法时出现预期以外的结果
+
+  // ⚠️ 注意：lastIndex属性只对同一个正则表达式有效
+  // let i = 0
+  // while (/a/g.test('babaa')) i++
+  // 上面代码会导致无限循环，因为while循环的每次匹配条件都是一个新的正则表达式，导致lastIndex属性总是等于0
+
+  // 如果正则模式是一个空字符串，则匹配所有字符串
+  console.log(new RegExp('').test('abc')) // true
+
+  // (2). RegExp.prototype.exec() => 正则实例对象的exec()方法，用来返回匹配结果。如果发现匹配，就返回一个数组，成员是匹配成功的子字符串，否则返回null
+  console.log('############### (2). RegExp.prototype.exec() ################')
+  console.log(/x/.exec('_x_x')) // [ 'x', index: 1, input: '_x_x', groups: undefined ]
+  console.log(/y/.exec('_x_x')) // null
+
+  // 如果正则表示式包含圆括号（即含有“组匹配”），则返回的数组会包括多个成员。第一个成员是整个匹配成功的结果，后面的成员就是圆括号对应的匹配成功的组。也就是说，第二个成员对应第一个括号，第三个成员对应第二个括号，以此类推。整个数组的length属性等于组匹配的数量再加1
+  console.log(/_(x)(y)/.exec('_x_xy')) // [ '_xy', 'x', 'y', index: 2, input: '_x_xy', groups: undefined ]
+
+  // exec()方法的返回数组还包含以下两个属性：
+  // input：整个原字符串。
+  // index：模式匹配成功的开始位置（从0开始计数）
+
+  // 4.字符串的实例方法
+  console.log('##################### 字符串的实例方法 #######################')
+  //   字符串的实例方法之中，有4种与正则表达式有关:
+  // String.prototype.match()：返回一个数组，成员是所有匹配的子字符串
+  console.log(
+    '################### String.prototype.match() ####################'
+  )
+  // 字符串实例对象的match方法对字符串进行正则匹配，返回匹配结果，没有匹配到则返回null
+  console.log('abc'.match(/d/)) // null
+
+  console.log('abcabc'.match(/a/)) // [ 'a', index: 0, input: 'abcabc', groups: undefined ]
+
+  // 如果加上g修饰符的话则会一次返回所有
+  console.log('abcabc'.match(/a/g)) // [ 'a', 'a' ]
+
+  // 设置正则表达式的lastIndex属性，对match方法无效，匹配总是从字符串的第一个字符开始
+
+  // String.prototype.search()：按照给定的正则表达式进行搜索，返回一个整数，表示匹配开始的位置
+  console.log(
+    '################### String.prototype.search() ####################'
+  )
+  // 字符串对象的search方法，返回第一个满足条件的匹配结果在整个字符串中的位置。如果没有任何匹配，则返回-1
+  console.log('abc'.search(/d/)) // -1
+  console.log('abc'.search(/a/)) // 0
+
+  // String.prototype.replace()：按照给定的正则表达式进行替换，返回替换后的字符串
+  console.log(
+    '################### String.prototype.replace() ####################'
+  )
+  // 字符串对象的replace方法可以替换匹配的值。它接受两个参数，第一个是正则表达式，表示搜索模式，第二个是替换的内容
+  // 正则表达式如果不加g修饰符，就替换第一个匹配成功的值，否则替换所有匹配成功的值
+  console.log('aaa'.replace('a', 'b')) // baa
+  console.log('aaa'.replace(/a/, 'b')) // baa
+  console.log('aaa'.replace(/a/g, 'b')) // bbb
+
+  // replace方法的第二个参数可以使用美元符号$，用来指代所替换的内容:
+  // $&：匹配的子字符串
+  // $`：匹配结果前面的文本
+  // $'：匹配结果后面的文本
+  // $n：匹配成功的第n组内容，n是从1开始的自然数
+  // $$：指代美元符号$
+
+  // String.prototype.split()：按照给定规则进行字符串分割，返回一个数组，包含分割后的各个成员
+  console.log(
+    '################### String.prototype.split() ####################'
+  )
 }
