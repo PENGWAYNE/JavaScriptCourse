@@ -2,7 +2,7 @@
  * @Description: RegExp 对象
  * @Author: WaynePeng
  * @Date: 2020-03-24 14:20:38
- * @LastEditTime: 2020-03-27 18:06:37
+ * @LastEditTime: 2020-03-28 10:35:56
  * @LastEditors: WaynePeng
  */
 {
@@ -275,6 +275,7 @@
   // $'：匹配结果后面的文本
   // $n：匹配成功的第n组内容，n是从1开始的自然数
   // $$：指代美元符号$
+  console.log('hello world'.replace(/(\w+)\s(\w+)/, '$2 $1')) // // world hello
 
   // String.prototype.split()：按照给定规则进行字符串分割，返回一个数组，包含分割后的各个成员
   console.log(
