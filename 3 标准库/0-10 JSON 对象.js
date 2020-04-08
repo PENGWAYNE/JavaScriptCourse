@@ -2,7 +2,7 @@
  * @Description: JSON 对象
  * @Author: WaynePeng
  * @Date: 2020-04-07 17:11:56
- * @LastEditTime: 2020-04-07 18:04:50
+ * @LastEditTime: 2020-04-08 11:21:32
  * @LastEditors: WaynePeng
  */
 // 1. JSON 格式
@@ -38,7 +38,7 @@ console.log(JSON.stringify('false')) // "\"false\""
 // ⚠️注意，如果对象的属性是undefined、函数或 XML 对象，该属性会被JSON.stringify过滤
 let obj = {
   a: undefined,
-  b: function () {},
+  b: function () {}
 }
 
 console.log(JSON.stringify(obj)) // {}
@@ -55,12 +55,12 @@ let obj1 = {}
 Object.defineProperties(obj1, {
   foo: {
     value: 1,
-    enumerable: true,
+    enumerable: true
   },
   bar: {
     value: 2,
-    enumerable: false,
-  },
+    enumerable: false
+  }
 })
 
 console.log(JSON.stringify(obj1)) // {"foo":1}
@@ -83,12 +83,83 @@ let obj3 = {
   b: 234,
   c: 345
 }
-console.log(JSON.stringify(obj3, function(key, value) {
-  if(typeof value === 'number') {
-    value = value * 2
-  }
-  return value
-}))
+console.log(
+  JSON.stringify(obj3, function (key, value) {
+    if (typeof value === 'number') {
+      value = value * 2
+    }
+    return value
+  })
+)
 // {"a":"123","b":468,"c":690}
 
 // ⚠️注意，如果处理函数返回undefined或没有返回值，则该属性会被忽略
+
+// (3). 第三个参数 => JSON.stringify还可以接受第三个参数，用于增加返回的 JSON 字符串的可读性。如果是数字，表示每个属性前面添加的空格（最多不超过10个）；如果是字符串（不超过10个字符），则该字符串会添加在每行前面
+console.log(JSON.stringify(obj3, null, 5)) // {     "a": "123",     "b": 234,     "c": 345}
+console.log(JSON.stringify(obj3, null, 'tag:')) // {tag:"a": "123",tag:"b": 234,tag:"c": 345}
+
+// (4). 参数对象的 toJSON 方法 => 如果参数对象有自定义的toJSON方法，那么JSON.stringify会使用这个方法的返回值作为参数，而忽略原对象的其他属性
+let user1 = {
+  firstName: '三',
+  lastName: '张',
+  get fullName() {
+    return this.lastName + this.firstName
+  }
+}
+
+console.log(JSON.stringify(user1)) // {"firstName":"三","lastName":"张","fullName":"张三"}
+
+let user2 = {
+  firstName: '三',
+  lastName: '张',
+  get fullName() {
+    return this.lastName + this.firstName
+  },
+  toJSON: function () {
+    return {
+      name: this.lastName + this.firstName
+    }
+  }
+}
+console.log(JSON.stringify(user2)) // {"name":"张三"}
+
+// Date对象就有一个自己的toJSON方法
+console.log(new Date('2020-04-08').toJSON()) // 2020-04-08T00:00:00.000Z
+
+// toJSON方法的一个应用是，将正则对象自动转为字符串。因为JSON.stringify默认不能转换正则对象，但是设置了toJSON方法以后，就可以转换正则对象了
+let REGEXP = {
+  reg: /abc/
+}
+console.log(JSON.stringify(REGEXP)) // {"reg":{}}
+RegExp.prototype.toJSON = RegExp.prototype.toString
+console.log(JSON.stringify(REGEXP)) // {"reg":"/abc/"}
+
+// 上面代码在正则对象的原型上面部署了toJSON()方法，将其指向toString()方法，因此转换成 JSON 格式时，正则对象就先调用toJSON()方法转为字符串，然后再被JSON.stringify()方法处理
+
+// 4. JSON.parse() => JSON.parse方法用于将 JSON 字符串转换成对应的值
+// JSON.parse('{}') // {}
+// JSON.parse('true') // true
+// JSON.parse('"foo"') // "foo"
+// JSON.parse('[1, 5, "false"]') // [1, 5, "false"]
+// JSON.parse('null') // null
+// let o = JSON.parse('{"name": "张三"}');
+// o.name // 张三
+
+// 如果传入的字符串不是有效的 JSON 格式，JSON.parse方法将报错
+// 为了处理解析错误，可以将JSON.parse方法放在try...catch代码块中
+try {
+  JSON.parse('我会报错')
+} catch (error) {
+  console.log(error.message) // Unexpected token 我 in JSON at position 0
+}
+
+// JSON.parse方法可以接受一个处理函数，作为第二个参数，用法与JSON.stringify方法类似
+function f(key, value) {
+  if (key === 'a') {
+    return value + 10
+  }
+  return value
+}
+
+console.log(JSON.parse('{"a": 1, "b": 2}', f)) // {a: 11, b: 2}
