@@ -2,7 +2,7 @@
  * @Description: RegExp 对象
  * @Author: WaynePeng
  * @Date: 2020-03-24 14:20:38
- * @LastEditTime: 2020-04-13 14:01:27
+ * @LastEditTime: 2020-04-16 10:50:13
  * @LastEditors: WaynePeng
  */
 {
@@ -410,5 +410,27 @@
   console.log(r4.test(s4)) // false
   // 正则模式含有g修饰符，每次都是从上一次匹配成功处，开始向后匹配。因为字符串abba只有两个b，所以前两次匹配结果为true，第三次匹配结果为false
   
+  // (9.2). i 修饰符 => 默认情况下，正则对象区分字母的大小写，加上i修饰符以后表示忽略大小写
+  console.log(/ABC/.test('abc')) // false
+  console.log(/ABC/i.test('abc')) // true
+
+  // (9.3). m 修饰符 => m修饰符表示多行模式（multiline），会修改^和$的行为。默认情况下（即不加m修饰符时），^和$匹配字符串的开始处和结尾处，加上m修饰符以后，^和$还会匹配行首和行尾，即^和$会识别换行符（\n）
+  console.log(/world$/.test('hello world\n')) // false
+  console.log(/world$/m.test('hello world\n')) // true
+
+  console.log(/^b/m.test('a\nb')) // true
+  // 上面代码要求匹配行首的b，如果不加m修饰符，就相当于b只能处在字符串的开始处。加上m修饰符以后，换行符\n也会被认为是一行的开始
+
+  // (10)
+  // (10.1). 组匹配 => 正则表达式的括号表示分组匹配，括号中的模式可以用来匹配分组的内容
+  console.log(/abc+/.test('abcc')) // true
+  console.log(/(abc)+/.test('abcabc')) // true
+  // 上面代码中，第一个模式没有括号，结果+只表示重复字母c，第二个模式有括号，结果+就表示匹配abc这个词
   
+  // (10.2). 非捕获组 => (?:x)称为非捕获组（Non-capturing group），表示不返回该组匹配的内容，即匹配的结果中不计入这个括号
+  // 非捕获组的作用请考虑这样一个场景，假定需要匹配foo或者foofoo，正则表达式就应该写成/(foo){1, 2}/，但是这样会占用一个组匹配。这时，就可以使用非捕获组，将正则表达式改为/(?:foo){1, 2}/，它的作用与前一个正则是一样的，但是不会单独输出括号内部的内容
+  console.log('abc'.match(/(?:.)b(.)/)) // [ 'abc', 'c', index: 0, input: 'abc', groups: undefined ]
+
+  // (10.3). 先行断言 => x(?=y)称为先行断言（Positive look-ahead），x只有在y前面才匹配，y不会被计入返回结果。比如，要匹配后面跟着百分号的数字，可以写成/\d+(?=%)/
+  console.log(/[0-9]+(?=%)/.exec('100%')) // [ '100', index: 0, input: '100%', groups: undefined ]
 }
